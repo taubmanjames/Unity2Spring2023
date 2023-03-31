@@ -6,11 +6,17 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     Vector2 moveDir;
-    public float speed = 10;
+
     Rigidbody rb;
     float h, v;
     Vector3 inputVector;
+    [Header("Movement Inputs")]
+    [Tooltip("Speed adjusts the speed of the player.")]
+    public float speed = 10;
+    [Tooltip("Jump height adjusts the force applied to the player jump.")]
+    [Range(0, 20)]
     public float jumpHeight = 10;
+    public LayerMask groundLayer;
 
     // Start is called before the first frame update
     void Start()
@@ -38,12 +44,28 @@ public class PlayerController : MonoBehaviour
 
     public void Jump()
     {
-        rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+        if (GroundCheck())
+        {
+            rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+        } 
     }
 
     float DampenValue(float readValue, float moveDir)
     {
         readValue = Mathf.MoveTowards(readValue, moveDir, Time.deltaTime * 2);
         return readValue = Mathf.Clamp(readValue, -1, 1);
+    }
+
+    bool GroundCheck()
+    {
+        float dist = GetComponent<Collider>().bounds.extents.y + 0.1f;
+        Ray ray = new Ray(transform.position, Vector3.down);
+        return Physics.Raycast(ray, dist, groundLayer);
+    }
+
+    private void OnDrawGizmos()
+    {
+        float dist = GetComponent<Collider>().bounds.extents.y + 0.1f;
+        Debug.DrawRay(transform.position, Vector3.down * dist, Color.blue);
     }
 }

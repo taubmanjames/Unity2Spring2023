@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     float h, v;
     Vector3 inputVector;
+    public float jumpHeight = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +34,11 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log(ctx.ReadValue<Vector2>());
         moveDir = ctx.ReadValue<Vector2>();
+    }
+
+    public void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
     }
 
     float DampenValue(float readValue, float moveDir)

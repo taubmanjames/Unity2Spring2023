@@ -8,7 +8,7 @@ public class CoinHUD : MonoBehaviour
     public int coinsCollected;
     public int coinsInScene;
     public TMP_Text coinDisplay;
-
+    public RaycastScript rayScript;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +20,10 @@ public class CoinHUD : MonoBehaviour
     {
         coinsCollected++;
         coinDisplay.text = $"Coins {coinsCollected}/{coinsInScene}";
+        if(coinsCollected == coinsInScene)
+        {
+            rayScript.canOpenDoor = true;
+        }
     }
 
 }

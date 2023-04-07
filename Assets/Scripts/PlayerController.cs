@@ -17,11 +17,13 @@ public class PlayerController : MonoBehaviour
     [Range(0, 20)]
     public float jumpHeight = 10;
     public LayerMask groundLayer;
+    public Animator anim;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        
     }
 
     // Update is called once per frame
@@ -33,12 +35,13 @@ public class PlayerController : MonoBehaviour
         inputVector = new Vector3(h * speed, rb.velocity.y, v * speed);
         transform.LookAt(transform.position + new Vector3(inputVector.x, 0, inputVector.z));
         rb.velocity = inputVector;
+        anim.SetFloat("Moving", moveDir.magnitude);
         Debug.DrawRay(transform.position, transform.forward * 7, Color.green);
     }
 
     public void MovePlayer(InputAction.CallbackContext ctx)
     {
-        Debug.Log(ctx.ReadValue<Vector2>());
+        //Debug.Log(ctx.ReadValue<Vector2>());
         moveDir = ctx.ReadValue<Vector2>();
     }
 
@@ -47,6 +50,7 @@ public class PlayerController : MonoBehaviour
         if (GroundCheck())
         {
             rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+            anim.SetTrigger("Jump");
         } 
     }
 
